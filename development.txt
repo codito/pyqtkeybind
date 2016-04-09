@@ -1,4 +1,4 @@
--r requirement.txt
+-r requirements.txt
 coverage
 flake8
 flake8-pep257
