@@ -34,12 +34,10 @@ class WinKeyBinder(object):
         # print(mods)
         # print(kc)
         
-        # Add MOD_NOREPEAT
-        # mods = mods | 0x4000
-        # TODO keys get notified twice, fix it
-
         # High word = Key code, Low word = Modifiers
         # https://msdn.microsoft.com/en-us/library/windows/desktop/ms646279%28v=vs.85%29.aspx
+        # Add MOD_NOREPEAT = 0x4000 to mods, so that keys don't get notified twice
+        # This requires VISTA+ operating system
         key_index = kc << 16 | mods
         if not self.__keygrabs[key_index] and\
                 not self.RegisterHotKey(c_int(wid), 0x1, UINT(mods | 0x4000), UINT(kc)):
@@ -61,10 +59,9 @@ class WinKeyBinder(object):
         if eventType == "windows_generic_MSG":
             if msg.message == WM_HOTKEY_MSG:
                 key = msg.lParam
-                print(key & 0xffff)
-                print(key >> 16)
-                if (0x1000 & (key & 0xffff) != 0):
-                    return
                 for cb in self.__keybinds.get(key, []):
-                    cb()
-        return
+                    try:
+                        cb()
+                    finally:
+                        return True
+        return False
