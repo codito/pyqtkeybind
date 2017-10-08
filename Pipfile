@@ -1,0 +1,24 @@
+[[source]]
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+xcffib = "*"
+"pyqt5" = "*"
+
+
+[dev-packages]
+
+"flake8" = "*"
+jedi = "*"
+mock = "*"
+nose = "*"
+pydocstyle = "*"
+rednose = "*"
+sure = "*"
+twine = "*"
+wheel = "*"
+
+[requires]
+python_version = "3.6"
