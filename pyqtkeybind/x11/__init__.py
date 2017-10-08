@@ -32,7 +32,7 @@ class X11KeyBinder(object):
     def unregister_hotkey(self, wid, modifiers, key):
         return ungrab_key(self.conn, wid, modifier, key)
 
-    def handler(self, message):
+    def handler(self, eventType, message):
         e = self._parse_keypress_event(message)
 
         if e.is_valid():

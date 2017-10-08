@@ -1,8 +1,10 @@
 """
-Based on https://github.com/BurntSushi/xpybutil/blob/master/xpybutil/keybind.py
+Based on the xpybutil library.
+https://github.com/BurntSushi/xpybutil/blob/master/xpybutil/keybind.py
 
 Every thing other than utilities needed for global key binding are removed.
 """
+
 from collections import defaultdict
 import sys
 

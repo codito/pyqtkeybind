@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Source: Qt source code
-# https:#raw.githubusercontent.com/qtproject/qtbase/dev/src/plugins/platforms/windows/qwindowskeymapper.cpp
+# https://raw.githubusercontent.com/qtproject/qtbase/dev/src/plugins/platforms/windows/qwindowskeymapper.cpp
 # flake8: noqa
 
 from PyQt5 import QtCore
