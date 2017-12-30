@@ -97,7 +97,7 @@ def parse_keystring(conn, key_string):
     modifiers = 0
     keycode = None
 
-    for part in key_string.split('-'):
+    for part in key_string.split('+'):
         if hasattr(xproto.KeyButMask, part):
             modifiers |= getattr(xproto.KeyButMask, part)
         else:

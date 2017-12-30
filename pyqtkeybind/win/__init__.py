@@ -28,12 +28,9 @@ class WinKeyBinder(object):
 
     def register_hotkey(self, wid, keys, callback):
         mods, kc = keys_from_string(keys)
-        if wid == None:
+        if wid is None:
             wid = 0x0
-        # print(wid)
-        # print(mods)
-        # print(kc)
-        
+
         # High word = Key code, Low word = Modifiers
         # https://msdn.microsoft.com/en-us/library/windows/desktop/ms646279%28v=vs.85%29.aspx
         # Add MOD_NOREPEAT = 0x4000 to mods, so that keys don't get notified twice
@@ -58,6 +55,7 @@ class WinKeyBinder(object):
         msg = ctypes.wintypes.MSG.from_address(message.__int__())
         if eventType == "windows_generic_MSG":
             if msg.message == WM_HOTKEY_MSG:
+                print(msg)
                 key = msg.lParam
                 for cb in self.__keybinds.get(key, []):
                     try:

@@ -12,21 +12,23 @@ class WinEventFilter(QAbstractNativeEventFilter):
         super().__init__()
 
     def nativeEventFilter(self, eventType, message):
-        self.keybinder.handler(eventType, message)
-        return False, 0
+        ret = self.keybinder.handler(eventType, message)
+        return ret, 0
 
 
 def main():
     app = QtWidgets.QApplication(sys.argv)
     window = QtWidgets.QMainWindow()
 
-    print("Press Shift+F3 any where. Ctrl+C exits the app.")
+    print("Press Ctrl+Shift+A any where. Ctrl+C exits the app.")
 
     # Setup a global keyboard shortcut to print "Hello World" on pressing
     # Shift-F3
     keybinder.init()
-    callback = lambda: print("hello world")
-    keybinder.register_hotkey(window.winId(), "Shift-F3", callback)
+
+    def callback():
+        print("hello world")
+    keybinder.register_hotkey(window.winId(), "Shift+Ctrl+A", callback)
 
     # Install a native event filter to receive events from the OS
     win_event_filter = WinEventFilter(keybinder)
