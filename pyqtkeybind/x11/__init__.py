@@ -24,13 +24,15 @@ class X11KeyBinder(object):
         update_keyboard_mapping(self.conn, None)
 
     def register_hotkey(self, wid, key_string, callback):
-        if wid == None:
+        if wid is None:
             wid = QX11Info.appRootWindow()
 
         return bind_global_key(self.conn, "KeyPress", key_string, callback)
 
     def unregister_hotkey(self, wid, modifiers, key):
-        return ungrab_key(self.conn, wid, modifier, key)
+        # TODO add support
+        # return ungrab_key(self.conn, wid, modifiers, key)
+        pass
 
     def handler(self, eventType, message):
         e = self._parse_keypress_event(message)

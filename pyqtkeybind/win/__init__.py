@@ -43,6 +43,7 @@ class WinKeyBinder(object):
 
         self.__keybinds[key_index].append(callback)
         self.__keygrabs[key_index] += 1
+        return True
 
     def unregister_hotkey(self, wid, modifiers, key):
         if not self.UnregisterHotKey(c_int(wid), 0x1):

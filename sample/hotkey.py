@@ -1,3 +1,7 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+"""Sample PyQt5 app to demonstrate keybinder capabilities."""
+
 import sys
 
 from PyQt5 import QtWidgets
@@ -20,15 +24,18 @@ def main():
     app = QtWidgets.QApplication(sys.argv)
     window = QtWidgets.QMainWindow()
 
-    print("Press Ctrl+Shift+A any where. Ctrl+C exits the app.")
+    print("Press Ctrl+Shift+A any where. Ctrl+Shift+E exits the app.")
 
     # Setup a global keyboard shortcut to print "Hello World" on pressing
-    # Shift-F3
+    # the shortcut
     keybinder.init()
 
     def callback():
         print("hello world")
+    def exit_app():
+        window.close()
     keybinder.register_hotkey(window.winId(), "Shift+Ctrl+A", callback)
+    keybinder.register_hotkey(window.winId(), "Shift+Ctrl+E", exit_app)
 
     # Install a native event filter to receive events from the OS
     win_event_filter = WinEventFilter(keybinder)

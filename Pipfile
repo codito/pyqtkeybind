@@ -1,24 +1,21 @@
 [[source]]
+
 url = "https://pypi.python.org/simple"
 verify_ssl = true
 name = "pypi"
 
+
 [packages]
-xcffib = "*"
-"pyqt5" = "*"
+
+"e1839a8" = {path = ".", editable = true}
 
 
 [dev-packages]
 
 "flake8" = "*"
-jedi = "*"
-mock = "*"
-nose = "*"
-pydocstyle = "*"
-rednose = "*"
-sure = "*"
+"flake8-docstrings" = "*"
+"flake8-per-file-ignores" = "*"
 twine = "*"
-wheel = "*"
-
-[requires]
-python_version = "3.6"
+pytest = "*"
+pytest-cov = "*"
+pytest-xvfb = "*"
