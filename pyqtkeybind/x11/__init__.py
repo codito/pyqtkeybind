@@ -38,8 +38,7 @@ class X11KeyBinder(object):
         e = self._parse_keypress_event(message)
 
         if e.is_valid():
-            run_keybind_callbacks(e)
-            return True
+            return run_keybind_callbacks(e)
         return False
 
     def _parse_keypress_event(self, message):

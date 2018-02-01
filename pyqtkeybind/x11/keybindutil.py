@@ -430,18 +430,21 @@ def run_keybind_callbacks(e):
     Callbacks are called in the order that they have been added. (FIFO.)
     :param e: A Key{Press,Release} event.
     :type e: xcb.xproto.Key{Press,Release}Event
-    :rtype: void
+    :rtype: bool True if the callback was serviced
     """
     kc, mods = e.detail, e.state
     for mod in TRIVIAL_MODS:
         mods &= ~mod
 
     key = (e.event, mods, kc)
+    serviced = False
     for cb in __keybinds.get(key, []):
         try:
             cb(e)
+            serviced = True
         except TypeError:
             cb()
+    return serviced
 
 def __regrab(changes):
     """
