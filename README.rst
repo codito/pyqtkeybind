@@ -3,6 +3,8 @@ pyqtkeybind
 
 version number: 0.0.2
 
+|Say thanks!|
+
 Overview
 --------
 
@@ -33,3 +35,6 @@ Contributing
 ------------
 
 Pull requests are most welcome.
+
+.. |Say thanks!| image:: https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg 
+   :target: https://saythanks.io/to/codito
