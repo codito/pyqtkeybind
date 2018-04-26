@@ -37,7 +37,7 @@ class WinKeyBinder(object):
         # This requires VISTA+ operating system
         key_index = kc << 16 | mods
         if not self.__keygrabs[key_index] and\
-                not self.RegisterHotKey(c_int(wid), 0x1, UINT(mods | 0x4000), UINT(kc)):
+                not self.RegisterHotKey(c_int(wid), key_index, UINT(mods | 0x4000), UINT(kc)):
             print("Couldn't register hot key!")
             return False
 
@@ -45,9 +45,11 @@ class WinKeyBinder(object):
         self.__keygrabs[key_index] += 1
         return True
 
-    def unregister_hotkey(self, wid, modifiers, key):
-        if not self.UnregisterHotKey(c_int(wid), 0x1):
-            print("Couldn't unregister hot key!")
+    def unregister_hotkey(self, wid, keys):
+        mods, kc = keys_from_string(keys)
+        key_index = kc << 16 | mods
+        if not self.UnregisterHotKey(c_int(wid), key_index):
+            print("Couldn't unregister hot key '{}'".format(keys))
             return False
         return True
 
@@ -56,7 +58,6 @@ class WinKeyBinder(object):
         msg = ctypes.wintypes.MSG.from_address(message.__int__())
         if eventType == "windows_generic_MSG":
             if msg.message == WM_HOTKEY_MSG:
-                print(msg)
                 key = msg.lParam
                 for cb in self.__keybinds.get(key, []):
                     try:

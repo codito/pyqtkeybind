@@ -44,7 +44,8 @@ def main():
 
     window.show()
     app.exec_()
-    keybinder.unregister_hotkey(window.winId(), 0x0, 0x0)
+    keybinder.unregister_hotkey(window.winId(), "Shift+Ctrl+A")
+    keybinder.unregister_hotkey(window.winId(), "Shift+Ctrl+E")
 
 
 if __name__ == '__main__':

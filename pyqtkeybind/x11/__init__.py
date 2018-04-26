@@ -29,7 +29,7 @@ class X11KeyBinder(object):
 
         return bind_global_key(self.conn, "KeyPress", key_string, callback)
 
-    def unregister_hotkey(self, wid, modifiers, key):
+    def unregister_hotkey(self, wid, key_string):
         # TODO add support
         # return ungrab_key(self.conn, wid, modifiers, key)
         pass
