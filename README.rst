@@ -1,7 +1,7 @@
 pyqtkeybind
 ===========
 
-version number: 0.0.2
+version number: 0.0.3
 
 |Say thanks!|
 
