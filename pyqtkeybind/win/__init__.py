@@ -3,7 +3,7 @@ import sys
 from collections import defaultdict
 
 import ctypes
-from ctypes import c_bool, c_int, WINFUNCTYPE, windll
+from ctypes import c_bool, c_int, WINFUNCTYPE, GetLastError
 from ctypes.wintypes import UINT
 
 from .keybindutil import keys_from_string
@@ -16,15 +16,16 @@ class WinKeyBinder(object):
     def init(self):
         # Register os dependent hooks
         if sys.platform.startswith("win"):
+            self.user32 = ctypes.WinDLL('user32', use_errno=True, use_last_error=True)
             # http://msdn.microsoft.com/en-us/library/windows/desktop/ms646309%28v=vs.85%29.aspx
             prototype = WINFUNCTYPE(c_bool, c_int, c_int, UINT, UINT)
             paramflags = (1, 'hWnd', 0), (1, 'id', 0), (1, 'fsModifiers', 0), (1, 'vk', 0)
-            self.RegisterHotKey = prototype(('RegisterHotKey', windll.user32), paramflags)
+            self.RegisterHotKey = prototype(('RegisterHotKey', self.user32), paramflags)
 
             # http://msdn.microsoft.com/en-us/library/windows/desktop/ms646327%28v=vs.85%29.aspx
             prototype = WINFUNCTYPE(c_bool, c_int, c_int)
             paramflags = (1, 'hWnd', 0), (1, 'id', 0)
-            self.UnregisterHotKey = prototype(('UnregisterHotKey', windll.user32), paramflags)
+            self.UnregisterHotKey = prototype(('UnregisterHotKey', self.user32), paramflags)
 
     def register_hotkey(self, wid, keys, callback):
         mods, kc = keys_from_string(keys)
@@ -48,8 +49,14 @@ class WinKeyBinder(object):
     def unregister_hotkey(self, wid, keys):
         mods, kc = keys_from_string(keys)
         key_index = kc << 16 | mods
+
+        self.__keybinds.pop(key_index)
+        self.__keygrabs.pop(key_index)
+
         if not self.UnregisterHotKey(c_int(wid), key_index):
-            print("Couldn't unregister hot key '{}'".format(keys))
+            err = "Couldn't unregister hot key '{0}'. Error code = {1}."\
+                .format(keys, GetLastError())
+            print(err)
             return False
         return True
 

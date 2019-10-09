@@ -34,8 +34,13 @@ def main():
         print("hello world")
     def exit_app():
         window.close()
+    def unregister():
+        keybinder.unregister_hotkey(window.winId(), "Shift+Ctrl+A")
+        keybinder.register_hotkey(window.winId(), "Shift+Ctrl+A", callback)
+
     keybinder.register_hotkey(window.winId(), "Shift+Ctrl+A", callback)
     keybinder.register_hotkey(window.winId(), "Shift+Ctrl+E", exit_app)
+    keybinder.register_hotkey(window.winId(), "Shift+Ctrl+F", unregister)
 
     # Install a native event filter to receive events from the OS
     win_event_filter = WinEventFilter(keybinder)
