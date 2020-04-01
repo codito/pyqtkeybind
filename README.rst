@@ -1,7 +1,7 @@
 pyqtkeybind
 ===========
 
-version number: 0.0.4
+version number: 0.0.5
 
 |Say thanks!|
 
@@ -36,5 +36,5 @@ Contributing
 
 Pull requests are most welcome.
 
-.. |Say thanks!| image:: https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg 
+.. |Say thanks!| image:: https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg
    :target: https://saythanks.io/to/codito
