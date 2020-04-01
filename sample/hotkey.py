@@ -24,11 +24,15 @@ def main():
     app = QtWidgets.QApplication(sys.argv)
     window = QtWidgets.QMainWindow()
 
-    print("Press Ctrl+Shift+A any where. Ctrl+Shift+E exits the app.")
+    print("Sample app for pyqtkeybind:")
+    print("\tPress Ctrl+Shift+A any where to trigger a callback.")
+    print("\tCtrl+Shift+F unregisters and re-registers previous callback.")
+    print("\tCtrl+Shift+E exits the app.")
 
     # Setup a global keyboard shortcut to print "Hello World" on pressing
     # the shortcut
     keybinder.init()
+    unregistered = False
 
     def callback():
         print("hello world")
@@ -36,6 +40,7 @@ def main():
         window.close()
     def unregister():
         keybinder.unregister_hotkey(window.winId(), "Shift+Ctrl+A")
+        print("unregister and register previous binding")
         keybinder.register_hotkey(window.winId(), "Shift+Ctrl+A", callback)
 
     keybinder.register_hotkey(window.winId(), "Shift+Ctrl+A", callback)
@@ -50,6 +55,7 @@ def main():
     window.show()
     app.exec_()
     keybinder.unregister_hotkey(window.winId(), "Shift+Ctrl+A")
+    keybinder.unregister_hotkey(window.winId(), "Shift+Ctrl+F" )
     keybinder.unregister_hotkey(window.winId(), "Shift+Ctrl+E")
 
 

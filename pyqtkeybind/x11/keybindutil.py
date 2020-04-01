@@ -362,6 +362,34 @@ def grab_key(conn, wid, modifiers, key):
     except xproto.BadAccess:
         return False
 
+def unbind_global_key(conn, event_type, key_string):
+    """
+    Unbind a key previous registered with ``bind_global_key``.
+    :param event_type: Either 'KeyPress' or 'KeyRelease'.
+    :type event_type: str
+    :param key_string: A string of the form 'Mod1-Control-a'.
+                       Namely, a list of zero or more modifiers separated by
+                       '-', followed by a single non-modifier key.
+    :type key_string: str
+    :return: True if the unbinding was successful, False otherwise.
+    :rtype: bool
+    """
+    wid = conn.get_setup().roots[0].root
+    mods, kc = parse_keystring(conn, key_string)
+    key = (wid, mods, kc)
+
+    if not kc:
+        print("Could not find a keycode for " + key_string)
+        return False
+
+    if __keygrabs[key] and not ungrab_key(conn, wid, mods, kc):
+        return False
+
+    del __keybinds[key]
+    del __keygrabs[key]
+
+    return True
+
 def ungrab_key(conn, wid, modifiers, key):
     """
     Ungrabs a key that was grabbed by ``grab_key``. Similarly, it will return
@@ -464,4 +492,3 @@ def __regrab(changes):
             new = (wid, mods, changes[kc])
             __keybinds[new] = __keybinds[old]
             del __keybinds[old]
-

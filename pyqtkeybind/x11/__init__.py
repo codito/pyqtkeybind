@@ -30,9 +30,10 @@ class X11KeyBinder(object):
         return bind_global_key(self.conn, "KeyPress", key_string, callback)
 
     def unregister_hotkey(self, wid, key_string):
-        # TODO add support
-        # return ungrab_key(self.conn, wid, modifiers, key)
-        pass
+        if wid is None:
+            wid = QX11Info.appRootWindow()
+
+        return unbind_global_key(self.conn, wid, key_string)
 
     def handler(self, eventType, message):
         e = self._parse_keypress_event(message)
