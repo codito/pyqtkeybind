@@ -30,7 +30,7 @@ jobs:
         sudo apt-get install xdotool
     - name: Test with pytest
       run: |
-        "export DISPLAY=:99.0"
+        export DISPLAY=:99.0
         xvfb-run pipenv run pytest
     - name: Upload coverage results
       uses: codecov/codecov-action@v1.2.1
