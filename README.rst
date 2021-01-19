@@ -1,9 +1,7 @@
 pyqtkeybind
 ===========
 
-version number: 0.0.6
-
-|Say thanks!|
+|pypi|
 
 Overview
 --------
@@ -36,5 +34,5 @@ Contributing
 
 Pull requests are most welcome.
 
-.. |Say thanks!| image:: https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg
-   :target: https://saythanks.io/to/codito
+.. |pypi| image:: https://img.shields.io/pypi/v/pyqtkeybind
+   :target: https://pypi.org/project/pyqtkeybind/

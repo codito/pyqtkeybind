@@ -1,0 +1,9 @@
+-r requirements.txt
+flake8
+flake8-docstrings
+flake8-per-file-ignores
+pytest
+pytest-cov
+pytest-xvfb
+twine
+wheel
