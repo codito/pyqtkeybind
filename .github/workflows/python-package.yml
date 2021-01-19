@@ -27,7 +27,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         if [ -f requirements.txt ]; then pip install -r development.txt; fi
-        sudo apt install -y xvfb x11-utils libxkbcommon-x11-0
+        sudo apt install -y xvfb x11-utils libxkbcommon-x11-0 xdotool
     - name: Test with pytest
       run: |
         export DISPLAY=:99.0
