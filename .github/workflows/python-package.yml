@@ -31,6 +31,6 @@ jobs:
     - name: Test with pytest
       run: |
         export DISPLAY=:99.0
-        xvfb-run pipenv run pytest
+        xvfb-run pytest
     - name: Upload coverage results
       uses: codecov/codecov-action@v1.2.1
