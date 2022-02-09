@@ -25,7 +25,7 @@ def main():
     window = QtWidgets.QMainWindow()
 
     print("Sample app for pyqtkeybind:")
-    print("\tPress Ctrl+Shift+A any where to trigger a callback.")
+    print("\tPress Ctrl+Shift+A or Print Screen any where to trigger a callback.")
     print("\tCtrl+Shift+F unregisters and re-registers previous callback.")
     print("\tCtrl+Shift+E exits the app.")
 
@@ -44,6 +44,7 @@ def main():
         keybinder.register_hotkey(window.winId(), "Shift+Ctrl+A", callback)
 
     keybinder.register_hotkey(window.winId(), "Shift+Ctrl+A", callback)
+    keybinder.register_hotkey(window.winId(), "Print Screen", callback)
     keybinder.register_hotkey(window.winId(), "Shift+Ctrl+E", exit_app)
     keybinder.register_hotkey(window.winId(), "Shift+Ctrl+F", unregister)
 
@@ -57,6 +58,7 @@ def main():
     keybinder.unregister_hotkey(window.winId(), "Shift+Ctrl+A")
     keybinder.unregister_hotkey(window.winId(), "Shift+Ctrl+F" )
     keybinder.unregister_hotkey(window.winId(), "Shift+Ctrl+E")
+    keybinder.unregister_hotkey(window.winId(), "Print Screen")
 
 
 if __name__ == '__main__':
