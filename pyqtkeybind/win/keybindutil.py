@@ -13,7 +13,7 @@ def keys_from_string(keys):
     ks = keysequence[0]
 
     # Calculate the modifiers
-    mods = Qt.NoModifier
+    mods = 0
     qtmods = Qt.NoModifier
     if (ks & Qt.ShiftModifier == Qt.ShiftModifier):
         mods |= ModsTbl.index(Qt.ShiftModifier)
