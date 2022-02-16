@@ -15,7 +15,7 @@ DESCRIPTION = "Global hotkey bindings for Windows and Linux for PyQt apps"
 URL = "https://github.com/codito/pyqtkeybind"
 EMAIL = "arun@codito.in"
 AUTHOR = "Arun Mahapatra"
-VERSION = (0, 0, 8)
+VERSION = (0, 0, 9)
 
 # Dependencies required for execution
 REQUIRED = [
