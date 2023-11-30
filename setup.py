@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
 """Setup for pyqtkeybind."""
 
 import io
@@ -15,12 +14,12 @@ DESCRIPTION = "Global hotkey bindings for Windows and Linux for PyQt apps"
 URL = "https://github.com/codito/pyqtkeybind"
 EMAIL = "arun@codito.in"
 AUTHOR = "Arun Mahapatra"
-VERSION = (0, 0, 9)
+VERSION = (0, 1, 0)
 
 # Dependencies required for execution
 REQUIRED = [
     "xcffib; sys_platform != 'win32'",
-    "PyQt5"
+    "qtpy"
 ]
 
 here = os.path.abspath(os.path.dirname(__file__))
@@ -88,8 +87,11 @@ setup(
         # Full list: https://pypi.python.org/pypi?%3Aaction=list_classifiers
         "License :: OSI Approved :: MIT License",
         "Programming Language :: Python",
-        "Programming Language :: Python :: 3",
-        "Programming Language :: Python :: 3.6",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
+        "Programming Language :: Python :: 3.10",
+        "Programming Language :: Python :: 3.11",
+        "Programming Language :: Python :: 3.12",
         "Programming Language :: Python :: Implementation :: CPython",
         "Programming Language :: Python :: Implementation :: PyPy",
         "Intended Audience :: Developers",
