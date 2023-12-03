@@ -1,11 +1,12 @@
 #!/usr/bin/env python
-# -*- coding: utf-8 -*-
-"""Sample PyQt5 app to demonstrate keybinder capabilities."""
+"""Sample QtPy app to demonstrate keybinder capabilities."""
 
 import sys
+from typing import Callable, Optional
 
-from PyQt5 import QtWidgets
-from PyQt5.QtCore import QAbstractNativeEventFilter, QAbstractEventDispatcher
+from qtpy import QtWidgets
+from qtpy.QtCore import QAbstractNativeEventFilter, QAbstractEventDispatcher
+import qtpy
 
 from pyqtkeybind import keybinder
 
@@ -20,46 +21,67 @@ class WinEventFilter(QAbstractNativeEventFilter):
         return ret, 0
 
 
+class EventDispatcher:
+    """Install a native event filter to receive events from the OS"""
+
+    def __init__(self, keybinder) -> None:
+        self.win_event_filter = WinEventFilter(keybinder)
+        self.event_dispatcher = QAbstractEventDispatcher.instance()
+        self.event_dispatcher.installNativeEventFilter(self.win_event_filter)
+
+
+class QtKeyBinder:
+    def __init__(self, win_id: Optional[int]) -> None:
+        keybinder.init()
+        self.win_id = win_id
+
+        self.event_dispatcher = EventDispatcher(keybinder=keybinder)
+
+    def register_hotkey(self, hotkey: str, callback: Callable) -> None:
+        keybinder.register_hotkey(self.win_id, hotkey, callback)
+
+    def unregister_hotkey(self, hotkey: str) -> None:
+        keybinder.unregister_hotkey(self.win_id, hotkey)
+
+
 def main():
     app = QtWidgets.QApplication(sys.argv)
     window = QtWidgets.QMainWindow()
+
+    print("Using {} {}.\n".format(qtpy.API_NAME, qtpy.QT_VERSION))
 
     print("Sample app for pyqtkeybind:")
     print("\tPress Ctrl+Shift+A or Print Screen any where to trigger a callback.")
     print("\tCtrl+Shift+F unregisters and re-registers previous callback.")
     print("\tCtrl+Shift+E exits the app.")
 
-    # Setup a global keyboard shortcut to print "Hello World" on pressing
+    # Set up a global keyboard shortcut to print "Hello World" on pressing
     # the shortcut
-    keybinder.init()
-    unregistered = False
+    sample_key_binder = QtKeyBinder(win_id=None)
 
     def callback():
         print("hello world")
+
     def exit_app():
         window.close()
+
     def unregister():
-        keybinder.unregister_hotkey(window.winId(), "Shift+Ctrl+A")
+        sample_key_binder.unregister_hotkey("Ctrl+Shift+A")
         print("unregister and register previous binding")
-        keybinder.register_hotkey(window.winId(), "Shift+Ctrl+A", callback)
+        sample_key_binder.register_hotkey("Ctrl+Shift+A", callback)
 
-    keybinder.register_hotkey(window.winId(), "Shift+Ctrl+A", callback)
-    keybinder.register_hotkey(window.winId(), "Print Screen", callback)
-    keybinder.register_hotkey(window.winId(), "Shift+Ctrl+E", exit_app)
-    keybinder.register_hotkey(window.winId(), "Shift+Ctrl+F", unregister)
-
-    # Install a native event filter to receive events from the OS
-    win_event_filter = WinEventFilter(keybinder)
-    event_dispatcher = QAbstractEventDispatcher.instance()
-    event_dispatcher.installNativeEventFilter(win_event_filter)
+    sample_key_binder.register_hotkey("Ctrl+Shift+A", callback)
+    sample_key_binder.register_hotkey("Print Screen", callback)
+    sample_key_binder.register_hotkey("Ctrl+Shift+E", exit_app)
+    sample_key_binder.register_hotkey("Ctrl+Shift+F", unregister)
 
     window.show()
     app.exec_()
-    keybinder.unregister_hotkey(window.winId(), "Shift+Ctrl+A")
-    keybinder.unregister_hotkey(window.winId(), "Shift+Ctrl+F" )
-    keybinder.unregister_hotkey(window.winId(), "Shift+Ctrl+E")
-    keybinder.unregister_hotkey(window.winId(), "Print Screen")
+    sample_key_binder.unregister_hotkey("Ctrl+Shift+A")
+    sample_key_binder.unregister_hotkey("Ctrl+Shift+F")
+    sample_key_binder.unregister_hotkey("Ctrl+Shift+E")
+    sample_key_binder.unregister_hotkey("Print Screen")
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
