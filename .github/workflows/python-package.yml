@@ -34,4 +34,4 @@ jobs:
       run: |
         xvfb-run --auto-servernum pytest
     - name: Upload coverage results
-      uses: codecov/codecov-action@v3.1.2
+      uses: codecov/codecov-action@v3.1.4
