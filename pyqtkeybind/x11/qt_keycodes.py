@@ -20,9 +20,8 @@ KeyTbl = {
     "XK_Clear": Qt.Key_Delete,
     "XK_Pause": Qt.Key_Pause,
     "XK_Print": Qt.Key_Print,
-    "0x1005FF60": Qt.Key_SysReq,         # hardcoded Sun SysReq
-    "0x1007ff00": Qt.Key_SysReq,         # hardcoded X386 SysReq
-
+    "0x1005FF60": Qt.Key_SysReq,  # hardcoded Sun SysReq
+    "0x1007ff00": Qt.Key_SysReq,  # hardcoded X386 SysReq
     # cursor movement
     "XK_Home": Qt.Key_Home,
     "XK_End": Qt.Key_End,
@@ -32,7 +31,6 @@ KeyTbl = {
     "XK_Down": Qt.Key_Down,
     "XK_Prior": Qt.Key_PageUp,
     "XK_Next": Qt.Key_PageDown,
-
     # modifiers
     "XK_Shift_L": Qt.Key_Shift,
     "XK_Shift_R": Qt.Key_Shift,
@@ -52,10 +50,9 @@ KeyTbl = {
     "XK_Hyper_L": Qt.Key_Hyper_L,
     "XK_Hyper_R": Qt.Key_Hyper_R,
     "XK_Help": Qt.Key_Help,
-    "0x1000FF74": Qt.Key_Backtab,        # hardcoded HP backtab
-    "0x1005FF10": Qt.Key_F11,            # hardcoded Sun F36 (labeled F11)
-    "0x1005FF11": Qt.Key_F12,            # hardcoded Sun F37 (labeled F12)
-
+    "0x1000FF74": Qt.Key_Backtab,  # hardcoded HP backtab
+    "0x1005FF10": Qt.Key_F11,  # hardcoded Sun F36 (labeled F11)
+    "0x1005FF11": Qt.Key_F12,  # hardcoded Sun F37 (labeled F12)
     # numeric and function keypad keys
     "XK_KP_Space": Qt.Key_Space,
     "XK_KP_Tab": Qt.Key_Tab,
@@ -82,7 +79,6 @@ KeyTbl = {
     "XK_KP_Subtract": Qt.Key_Minus,
     "XK_KP_Decimal": Qt.Key_Period,
     "XK_KP_Divide": Qt.Key_Slash,
-
     # International input method support keys
     # International & multi-key character composition
     "XK_ISO_Level3_Shift": Qt.Key_AltGr,
@@ -91,15 +87,12 @@ KeyTbl = {
     "XK_SingleCandidate": Qt.Key_SingleCandidate,
     "XK_MultipleCandidate": Qt.Key_MultipleCandidate,
     "XK_PreviousCandidate": Qt.Key_PreviousCandidate,
-
     # Misc Functions
     "XK_Mode_switch": Qt.Key_Mode_switch,
     "XK_script_switch": Qt.Key_Mode_switch,
-
     # Japanese keyboard support
     "XK_Kanji": Qt.Key_Kanji,
     "XK_Muhenkan": Qt.Key_Muhenkan,
-
     # "XK_Henkan_Mode": Qt.Key_Henkan_Mode,
     "XK_Henkan_Mode": Qt.Key_Henkan,
     "XK_Henkan": Qt.Key_Henkan,
@@ -122,7 +115,6 @@ KeyTbl = {
     "XK_Kanji_Bangou": Qt.Key_Codeinput,
     "XK_Zen_Koho": Qt.Key_MultipleCandidate,
     "XK_Mae_Koho": Qt.Key_PreviousCandidate,
-
     # Korean keyboard support
     "XK_Hangul": Qt.Key_Hangul,
     "XK_Hangul_Start": Qt.Key_Hangul_Start,
@@ -145,7 +137,6 @@ KeyTbl = {
     "XK_Hangul_Special": Qt.Key_Hangul_Special,
     # "XK_Hangul_switch": Qt.Key_Hangul_switch,
     "XK_Hangul_switch": Qt.Key_Mode_switch,
-
     # dead keys
     "XK_dead_grave": Qt.Key_Dead_Grave,
     "XK_dead_acute": Qt.Key_Dead_Acute,
@@ -166,7 +157,6 @@ KeyTbl = {
     "XK_dead_belowdot": Qt.Key_Dead_Belowdot,
     "XK_dead_hook": Qt.Key_Dead_Hook,
     "XK_dead_horn": Qt.Key_Dead_Horn,
-
     # Special keys from X.org - This include multimedia keys,
     # wireless/bluetooth/uwb keys, special launcher keys, etc.
     "XF86XK_Back": Qt.Key_Back,
@@ -189,7 +179,6 @@ KeyTbl = {
     "XF86XK_AudioPause": Qt.Key_MediaPause,
     "XF86XK_Mail": Qt.Key_LaunchMail,
     "XF86XK_MyComputer": Qt.Key_Launch0,
-
     # ### Qt 6":     remap     properly
     "XF86XK_Calculator": Qt.Key_Launch1,
     "XF86XK_Memo": Qt.Key_Memo,
@@ -315,20 +304,19 @@ KeyTbl = {
     "XF86XK_LaunchD": Qt.Key_LaunchF,
     "XF86XK_LaunchE": Qt.Key_LaunchG,
     "XF86XK_LaunchF": Qt.Key_LaunchH,
-    0:                          0
+    0: 0,
 }
 
 # Possible modifier states.
 ModsTbl = [
-    Qt.NoModifier,                                           # 0
-    Qt.ShiftModifier,                                        # 1
-    Qt.ControlModifier,                                      # 2
-    Qt.ControlModifier | Qt.ShiftModifier,                   # 3
-    Qt.AltModifier,                                          # 4
-    Qt.AltModifier | Qt.ShiftModifier,                       # 5
-    Qt.AltModifier | Qt.ControlModifier,                     # 6
+    Qt.NoModifier,  # 0
+    Qt.ShiftModifier,  # 1
+    Qt.ControlModifier,  # 2
+    Qt.ControlModifier | Qt.ShiftModifier,  # 3
+    Qt.AltModifier,  # 4
+    Qt.AltModifier | Qt.ShiftModifier,  # 5
+    Qt.AltModifier | Qt.ControlModifier,  # 6
     Qt.AltModifier | Qt.ShiftModifier | Qt.ControlModifier,  # 7
-
     # Fall-back to raw Key_*, for non-latin1 kb layouts
-    Qt.NoModifier
+    Qt.NoModifier,
 ]

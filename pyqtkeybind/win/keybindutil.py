@@ -3,14 +3,13 @@ from ctypes import windll
 from typing import Tuple
 
 import qtpy
-from qtpy.QtGui import QKeySequence
 from qtpy.QtCore import Qt
+from qtpy.QtGui import QKeySequence
 
 from .keycodes import KeyTbl, ModsTbl
 
 
 def keys_from_string(keys: str) -> Tuple[int, int]:
-
     keysequence = QKeySequence(keys)
     if qtpy.QT5:
         ks = keysequence[0]

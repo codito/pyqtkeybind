@@ -4,11 +4,14 @@
 import sys
 from typing import Callable, Optional
 
-from qtpy import QtWidgets
-from qtpy.QtCore import QAbstractNativeEventFilter, QAbstractEventDispatcher
 import qtpy
+from qtpy import QtWidgets
+from qtpy.QtCore import QAbstractEventDispatcher, QAbstractNativeEventFilter
 
 from pyqtkeybind import keybinder
+
+# from PyQt6 import QtWidgets
+# from PyQt6.QtCore import QAbstractNativeEventFilter, QAbstractEventDispatcher
 
 
 class WinEventFilter(QAbstractNativeEventFilter):
@@ -57,7 +60,7 @@ def main():
 
     # Set up a global keyboard shortcut to print "Hello World" on pressing
     # the shortcut
-    sample_key_binder = QtKeyBinder(win_id=None)
+    sample_key_binder = QtKeyBinder(win_id=int(window.winId()))
 
     def callback():
         print("hello world")
@@ -70,10 +73,16 @@ def main():
         print("unregister and register previous binding")
         sample_key_binder.register_hotkey("Ctrl+Shift+A", callback)
 
+    # sample_key_binder.unregister_hotkey("Ctrl+Shift+A")
     sample_key_binder.register_hotkey("Ctrl+Shift+A", callback)
     sample_key_binder.register_hotkey("Print Screen", callback)
     sample_key_binder.register_hotkey("Ctrl+Shift+E", exit_app)
     sample_key_binder.register_hotkey("Ctrl+Shift+F", unregister)
+    # keybinder.register_hotkey(window.winId(), "Num+0", callback)
+    # keybinder.register_hotkey(window.winId(), "Shift+Ctrl+A", callback)
+    # keybinder.register_hotkey(window.winId(), "Print Screen", callback)
+    # keybinder.register_hotkey(window.winId(), "Shift+Ctrl+E", exit_app)
+    # keybinder.register_hotkey(window.winId(), "Shift+Ctrl+F", unregister)
 
     window.show()
     app.exec_()

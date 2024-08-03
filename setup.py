@@ -6,7 +6,7 @@ import os
 import sys
 from shutil import rmtree
 
-from setuptools import setup, find_packages, Command
+from setuptools import Command, find_packages, setup
 
 # Package meta-data.
 NAME = "pyqtkeybind"
@@ -17,10 +17,7 @@ AUTHOR = "Arun Mahapatra"
 VERSION = (0, 1, 0)
 
 # Dependencies required for execution
-REQUIRED = [
-    "xcffib; sys_platform != 'win32'",
-    "qtpy"
-]
+REQUIRED = ["xcffib; sys_platform != 'win32'", "qtpy"]
 
 here = os.path.abspath(os.path.dirname(__file__))
 
@@ -31,7 +28,7 @@ with io.open(os.path.join(here, "README.rst"), encoding="utf-8") as f:
 
 # Load the package"s __version__.py module as a dictionary.
 about = {}
-about["__version__"] = '.'.join(map(str, VERSION))
+about["__version__"] = ".".join(map(str, VERSION))
 
 
 class UploadCommand(Command):
@@ -59,8 +56,7 @@ class UploadCommand(Command):
             pass
 
         self.status("Building Source and Wheel (universal) distribution…")
-        os.system("{0} setup.py sdist bdist_wheel --universal"
-                  .format(sys.executable))
+        os.system("{0} setup.py sdist bdist_wheel --universal".format(sys.executable))
 
         self.status("Uploading the package to PyPi via Twine…")
         os.system("twine upload dist/*")
@@ -71,14 +67,13 @@ class UploadCommand(Command):
 # Where the magic happens:
 setup(
     name=NAME,
-    version=about['__version__'],
+    version=about["__version__"],
     description=DESCRIPTION,
     long_description=long_description,
     author=AUTHOR,
     author_email=EMAIL,
     url=URL,
-    packages=find_packages(exclude=['docs', 'tests*']),
-
+    packages=find_packages(exclude=["docs", "tests*"]),
     install_requires=REQUIRED,
     include_package_data=True,
     license="MIT",

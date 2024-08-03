@@ -8,21 +8,23 @@ Every thing other than utilities needed for global key binding are removed.
 from collections import defaultdict
 
 from xcffib import xproto
-from .keysymdef import keysyms, keysym_strings
+
+from .keysymdef import keysym_strings, keysyms
 
 __kbmap = None
 __keysmods = None
 
 __keybinds = defaultdict(list)
-__keygrabs = defaultdict(int)   # Key grab key -> number of grabs
+__keygrabs = defaultdict(int)  # Key grab key -> number of grabs
 
 GM = xproto.GrabMode
 TRIVIAL_MODS = [
     0,
     xproto.ModMask.Lock,
     xproto.ModMask._2,
-    xproto.ModMask.Lock | xproto.ModMask._2
+    xproto.ModMask.Lock | xproto.ModMask._2,
 ]
+
 
 def bind_global_key(conn, event_type, key_string, cb):
     """
@@ -40,6 +42,7 @@ def bind_global_key(conn, event_type, key_string, cb):
     """
     root = conn.get_setup().roots[0].root
     return bind_key(conn, event_type, root, key_string, cb)
+
 
 def bind_key(conn, event_type, wid, key_string, cb):
     """
@@ -62,7 +65,7 @@ def bind_key(conn, event_type, wid, key_string, cb):
     :return: True if the binding was successful, False otherwise.
     :rtype: bool
     """
-    assert event_type in ('KeyPress', 'KeyRelease')
+    assert event_type in ("KeyPress", "KeyRelease")
 
     mods, kc = parse_keystring(conn, key_string)
     key = (wid, mods, kc)
@@ -72,12 +75,14 @@ def bind_key(conn, event_type, wid, key_string, cb):
         return False
 
     if not __keygrabs[key] and not grab_key(conn, wid, mods, kc):
+        print("error binding")
         return False
 
     __keybinds[key].append(cb)
     __keygrabs[key] += 1
 
     return True
+
 
 def parse_keystring(conn, key_string):
     """
@@ -94,50 +99,72 @@ def parse_keystring(conn, key_string):
     :rtype: (mask, int)
     """
     # FIXME this code is temporary hack, requires better abstraction
-    from PyQt5.QtGui import QKeySequence
-    from PyQt5.QtCore import Qt
+    import qtpy
+    from qtpy.QtCore import Qt
+    from qtpy.QtGui import QKeySequence
+
     from .qt_keycodes import KeyTbl, ModsTbl
 
     keysequence = QKeySequence(key_string)
     ks = keysequence[0]
 
-    # Calculate the modifiers
-    mods = Qt.NoModifier
-    qtmods = Qt.NoModifier
-    modifiers = 0
-    if (ks & Qt.ShiftModifier == Qt.ShiftModifier):
-        mods |= ModsTbl.index(Qt.ShiftModifier)
-        qtmods |= Qt.ShiftModifier.real
-        modifiers |= getattr(xproto.KeyButMask, "Shift", 0)
-    if (ks & Qt.AltModifier == Qt.AltModifier):
-        mods |= ModsTbl.index(Qt.AltModifier)
-        qtmods |= Qt.AltModifier.real
-        modifiers |= getattr(xproto.KeyButMask, "Mod1", 0)
-    if (ks & Qt.ControlModifier == Qt.ControlModifier):
-        mods |= ModsTbl.index(Qt.ControlModifier)
-        qtmods |= Qt.ControlModifier.real
-        modifiers |= getattr(xproto.KeyButMask, "Control", 0)
+    # PyQt6 modifiers
+    if qtpy.API == "pyqt5":
+        # Calculate the modifiers
+        mods = Qt.NoModifier
+        qtmods = Qt.NoModifier
+        modifiers = 0
+        if ks & Qt.ShiftModifier == Qt.ShiftModifier:
+            mods |= ModsTbl.index(Qt.ShiftModifier)
+            qtmods |= Qt.ShiftModifier.real
+            modifiers |= getattr(xproto.KeyButMask, "Shift", 0)
+        if ks & Qt.AltModifier == Qt.AltModifier:
+            mods |= ModsTbl.index(Qt.AltModifier)
+            qtmods |= Qt.AltModifier.real
+            modifiers |= getattr(xproto.KeyButMask, "Mod1", 0)
+        if ks & Qt.ControlModifier == Qt.ControlModifier:
+            mods |= ModsTbl.index(Qt.ControlModifier)
+            qtmods |= Qt.ControlModifier.real
+            modifiers |= getattr(xproto.KeyButMask, "Control", 0)
+        if ks & Qt.KeypadModifier == Qt.KeypadModifier:
+            # mods |= ModsTbl.index(Qt.KeypadModifier)
+            qtmods |= Qt.KeypadModifier.real
+            modifiers |= getattr(xproto.KeyButMask, "Lock", 0)
+        # Calculate the keys
+        qtkeys = ks ^ qtmods
+    else:
+        qtmods = ks.keyboardModifiers()
+        modifiers = 0
+        if qtmods & Qt.ShiftModifier == Qt.ShiftModifier:
+            modifiers |= getattr(xproto.KeyButMask, "Shift", 0)
+        if qtmods & Qt.AltModifier == Qt.AltModifier:
+            modifiers |= getattr(xproto.KeyButMask, "Mod1", 0)
+        if qtmods & Qt.ControlModifier == Qt.ControlModifier:
+            modifiers |= getattr(xproto.KeyButMask, "Control", 0)
+        if qtmods & Qt.KeypadModifier == Qt.KeypadModifier:
+            modifiers |= getattr(xproto.KeyButMask, "Lock", 0)
+        qtkeys = ks.key()
 
-    # Calculate the keys
-    qtkeys = ks ^ qtmods
     key = QKeySequence(Qt.Key(qtkeys)).toString().lower()
     keycode = lookup_string(conn, key)
+    print("key code: ", modifiers, keycode)
     return modifiers, keycode
 
-    # Fallback logic
-    modifiers = 0
-    keycode = None
+    # # Fallback logic
+    # modifiers = 0
+    # keycode = None
+    #
+    # key_string = "Shift+Control+A"
+    # for part in key_string.split("+"):
+    #     if hasattr(xproto.KeyButMask, part):
+    #         modifiers |= getattr(xproto.KeyButMask, part)
+    #     else:
+    #         if len(part) == 1:
+    #             part = part.lower()
+    #         keycode = lookup_string(conn, part)
+    #
+    # return modifiers, keycode
 
-    key_string = "Shift+Control+A"
-    for part in key_string.split('+'):
-        if hasattr(xproto.KeyButMask, part):
-            modifiers |= getattr(xproto.KeyButMask, part)
-        else:
-            if len(part) == 1:
-                part = part.lower()
-            keycode = lookup_string(conn, part)
-
-    return modifiers, keycode
 
 def lookup_string(conn, kstr):
     """
@@ -154,6 +181,7 @@ def lookup_string(conn, kstr):
 
     return None
 
+
 def get_min_max_keycode(conn):
     """
     Return a tuple of the minimum and maximum keycode allowed in the
@@ -162,6 +190,7 @@ def get_min_max_keycode(conn):
     :rtype: (int, int)
     """
     return conn.get_setup().min_keycode, conn.get_setup().max_keycode
+
 
 def get_keyboard_mapping(conn):
     """
@@ -174,6 +203,7 @@ def get_keyboard_mapping(conn):
 
     return conn.core.GetKeyboardMapping(mn, mx - mn + 1)
 
+
 def get_keyboard_mapping_unchecked(conn):
     """
     Return an unchecked keyboard mapping cookie that can be used to fetch the
@@ -184,6 +214,7 @@ def get_keyboard_mapping_unchecked(conn):
     mn, mx = get_min_max_keycode()
 
     return conn.core.GetKeyboardMappingUnchecked(mn, mx - mn + 1)
+
 
 def get_keysym(conn, keycode, col=0, kbmap=None):
     """
@@ -222,6 +253,7 @@ def get_keysym(conn, keycode, col=0, kbmap=None):
 
     return kbmap.keysyms[ind]
 
+
 def get_keysym_string(keysym):
     """
     A simple wrapper to find the english string associated with a particular
@@ -231,6 +263,7 @@ def get_keysym_string(keysym):
     :rtype: str
     """
     return keysym_strings.get(keysym, [None])[0]
+
 
 def get_keycode(conn, keysym):
     """
@@ -251,6 +284,7 @@ def get_keycode(conn, keysym):
                 return i
 
     return None
+
 
 def get_keys_to_mods(conn):
     """
@@ -276,8 +310,16 @@ def get_keys_to_mods(conn):
     :rtype: dict
     """
     mm = xproto.ModMask
-    modmasks = [mm.Shift, mm.Lock, mm.Control,
-                mm._1, mm._2, mm._3, mm._4, mm._5] # order matters
+    modmasks = [
+        mm.Shift,
+        mm.Lock,
+        mm.Control,
+        mm._1,
+        mm._2,
+        mm._3,
+        mm._4,
+        mm._5,
+    ]  # order matters
 
     mods = conn.core.GetModifierMapping().reply()
 
@@ -285,10 +327,11 @@ def get_keys_to_mods(conn):
     keyspermod = mods.keycodes_per_modifier
     for mmi in range(0, len(modmasks)):
         row = mmi * keyspermod
-        for kc in mods.keycodes[row:row + keyspermod]:
+        for kc in mods.keycodes[row : row + keyspermod]:
             res[kc] = modmasks[mmi]
 
     return res
+
 
 def get_modifiers(state):
     """
@@ -303,33 +346,34 @@ def get_modifiers(state):
     ret = []
 
     if state & xproto.ModMask.Shift:
-        ret.append('Shift')
+        ret.append("Shift")
     if state & xproto.ModMask.Lock:
-        ret.append('Lock')
+        ret.append("Lock")
     if state & xproto.ModMask.Control:
-        ret.append('Control')
+        ret.append("Control")
     if state & xproto.ModMask._1:
-        ret.append('Mod1')
+        ret.append("Mod1")
     if state & xproto.ModMask._2:
-        ret.append('Mod2')
+        ret.append("Mod2")
     if state & xproto.ModMask._3:
-        ret.append('Mod3')
+        ret.append("Mod3")
     if state & xproto.ModMask._4:
-        ret.append('Mod4')
+        ret.append("Mod4")
     if state & xproto.ModMask._5:
-        ret.append('Mod5')
+        ret.append("Mod5")
     if state & xproto.KeyButMask.Button1:
-        ret.append('Button1')
+        ret.append("Button1")
     if state & xproto.KeyButMask.Button2:
-        ret.append('Button2')
+        ret.append("Button2")
     if state & xproto.KeyButMask.Button3:
-        ret.append('Button3')
+        ret.append("Button3")
     if state & xproto.KeyButMask.Button4:
-        ret.append('Button4')
+        ret.append("Button4")
     if state & xproto.KeyButMask.Button5:
-        ret.append('Button5')
+        ret.append("Button5")
 
     return ret
+
 
 def grab_key(conn, wid, modifiers, key):
     """
@@ -355,12 +399,15 @@ def grab_key(conn, wid, modifiers, key):
     """
     try:
         for mod in TRIVIAL_MODS:
-            conn.core.GrabKeyChecked(True, wid, modifiers | mod, key, GM.Async,
-                                     GM.Async).check()
+            result = conn.core.GrabKeyChecked(
+                True, wid, modifiers | mod, key, GM.Async, GM.Async
+            ).check()
+            print("GrabKeyChecked: ", result, modifiers, key)
 
         return True
     except xproto.BadAccess:
         return False
+
 
 def unbind_global_key(conn, event_type, key_string):
     """
@@ -390,6 +437,7 @@ def unbind_global_key(conn, event_type, key_string):
 
     return True
 
+
 def ungrab_key(conn, wid, modifiers, key):
     """
     Ungrabs a key that was grabbed by ``grab_key``. Similarly, it will return
@@ -413,6 +461,7 @@ def ungrab_key(conn, wid, modifiers, key):
         return True
     except xproto.BadAccess:
         return False
+
 
 def update_keyboard_mapping(conn, e):
     """
@@ -449,6 +498,7 @@ def update_keyboard_mapping(conn, e):
     elif e.request == xproto.Mapping.Modifier:
         __keysmods = get_keys_to_mods()
 
+
 def run_keybind_callbacks(e):
     """
     A function that intercepts all key press/release events, and runs
@@ -466,6 +516,7 @@ def run_keybind_callbacks(e):
 
     key = (e.event, mods, kc)
     serviced = False
+    print("key: ", key)
     for cb in __keybinds.get(key, []):
         try:
             cb(e)
@@ -473,6 +524,7 @@ def run_keybind_callbacks(e):
         except TypeError:
             cb()
     return serviced
+
 
 def __regrab(changes):
     """

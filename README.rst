@@ -6,7 +6,13 @@ pyqtkeybind
 Overview
 --------
 
-Cross platform global keybindings for PyQt5
+Cross platform global keybindings for PyQt.
+
+Versions `0.1.0` onwards support only PyQt6.
+
+For PyQt5 support, please use version `0.0.9`. Qt5 LTS reached end of life as of 
+May, 2023.
+
 
 Installation / Usage
 --------------------
